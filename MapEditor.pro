@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = MapEditor
 TEMPLATE = app
 
+INCLUDEPATH += include/
 
 SOURCES += src/main.cpp\
         src/mapeditor.cpp \

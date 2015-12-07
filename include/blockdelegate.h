@@ -14,6 +14,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void AddBlock(QImage block);
     QImage GetImage(int block);
+    int GetBlocksCount();
 private:
     QVector<QImage> Blocks;
 signals:

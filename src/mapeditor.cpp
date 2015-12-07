@@ -29,6 +29,8 @@ MapEditor::MapEditor(QWidget *parent) :
     ui->BlockList->setItemDelegate(BlockDlg);
     connect(ui->BlockList, SIGNAL(clicked(QModelIndex)), this, SLOT(ImageChanged(QModelIndex)));
 
+    ui->CurrentBlock->setIcon(QIcon((QPixmap().fromImage(BlockDlg->GetImage(0)))));
+
     connect(ui->ButtonAdd, SIGNAL(clicked(bool)), this, SLOT(LoadImages()));
 
 }
@@ -53,7 +55,8 @@ void MapEditor::LoadImages(){
 }
 
 void MapEditor::ImageChanged(QModelIndex index){
-    ActiveBlock = index.column() + index.row()*4;
+    int block = index.column() + index.row()*4;
+    if(block < BlockDlg->GetBlocksCount()) ActiveBlock = block;
     qDebug()<<index.column()<<":"<<index.row()<<"="<<index.column() + index.row()*4;
     ui->CurrentBlock->setIcon(QIcon(QPixmap().fromImage(BlockDlg->GetImage(index.model()->data(index).toInt()))));
 }

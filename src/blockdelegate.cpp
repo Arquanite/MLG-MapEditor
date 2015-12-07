@@ -16,5 +16,10 @@ void BlockDelegate::AddBlock(QImage block){
 }
 
 QImage BlockDelegate::GetImage(int block){
-    return Blocks.value(block);
+    if(block<Blocks.size()) return Blocks.value(block);
+    else return Blocks.value(0);
+}
+
+int BlockDelegate::GetBlocksCount(){
+    return Blocks.size();
 }
