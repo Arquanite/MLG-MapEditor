@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QColorDialog>
 #include "mapviewmodel.h"
 #include "blockviewmodel.h"
 #include "blockdelegate.h"
@@ -19,9 +20,11 @@ public:
     ~MapEditor();
 
 public slots:
-    void Edit(QModelIndex index);
+    void EditMap(QModelIndex index);
+    void EditBlock();
     void LoadImages();
     void ImageChanged(QModelIndex index);
+    void ChangeBackgroundColor();
 private:
     Ui::MapEditor *ui;
     MapViewModel *MapModel;

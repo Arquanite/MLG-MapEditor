@@ -13,9 +13,10 @@ MapEditor::MapEditor(QWidget *parent) :
     MapModel = new MapViewModel();
     ui->Map->setModel(MapModel);
     ui->Map->setMouseTracking(true);
-    connect(ui->Map, SIGNAL(clicked(QModelIndex)), this, SLOT(Edit(QModelIndex)));
+    connect(ui->Map, SIGNAL(clicked(QModelIndex)), this, SLOT(EditMap(QModelIndex)));
     ui->Map->setFocusPolicy(Qt::NoFocus);
     ui->Map->setItemDelegate(BlockDlg);
+    ui->Map->setStyleSheet("QTableView{ background-color: #ffffff; }");
 
     ui->splitter->setStretchFactor(0,1);
     ui->splitter->setStretchFactor(1,0);
@@ -32,6 +33,7 @@ MapEditor::MapEditor(QWidget *parent) :
     ui->CurrentBlock->setIcon(QIcon((QPixmap().fromImage(BlockDlg->GetImage(0)))));
 
     connect(ui->ButtonAdd, SIGNAL(clicked(bool)), this, SLOT(LoadImages()));
+    connect(ui->ButtonEdit, SIGNAL(clicked(bool)), this, SLOT(EditBlock()));
 
 }
 
@@ -40,7 +42,7 @@ MapEditor::~MapEditor()
     delete ui;
 }
 
-void MapEditor::Edit(QModelIndex index){
+void MapEditor::EditMap(QModelIndex index){
     MapModel->ChangeBlock(index, ActiveBlock);
 }
 
@@ -59,4 +61,19 @@ void MapEditor::ImageChanged(QModelIndex index){
     if(block < BlockDlg->GetBlocksCount()) ActiveBlock = block;
     qDebug()<<index.column()<<":"<<index.row()<<"="<<index.column() + index.row()*4;
     ui->CurrentBlock->setIcon(QIcon(QPixmap().fromImage(BlockDlg->GetImage(index.model()->data(index).toInt()))));
+}
+
+void MapEditor::EditBlock(){
+    if(ActiveBlock == 0) ChangeBackgroundColor();
+}
+
+void MapEditor::ChangeBackgroundColor(){
+    QColor color = QColorDialog::getColor(BlockDlg->GetBackgroundColor(),this,tr("Select new background color"));
+    BlockDlg->SetBackgroundColor(color);
+    QString R,G,B;
+    R = QString::number(color.red());
+    G = QString::number(color.green());
+    B = QString::number(color.blue());
+    ui->Map->setStyleSheet("QTableView{ background-color: rgb("+ R +","+ G +","+ B +"); }");
+    BlockModel->dataChanged(BlockModel->index(0,0), BlockModel->index(0,0));
 }

@@ -3,8 +3,9 @@
 BlockDelegate::BlockDelegate(QWidget *parent)
 {
     QImage image(48,48, QImage::Format_RGBA8888);
-    image.fill(QColor("#ffffff"));
     Blocks.push_back(image);
+    BackgroundColor = QColor("#ffffff");
+    SetBackgroundColor(BackgroundColor);
 }
 
 void BlockDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const{
@@ -22,4 +23,15 @@ QImage BlockDelegate::GetImage(int block){
 
 int BlockDelegate::GetBlocksCount(){
     return Blocks.size();
+}
+
+void BlockDelegate::SetBackgroundColor(QColor color){
+    BackgroundColor = color;
+    QImage image(48,48, QImage::Format_RGBA8888);
+    image.fill(BackgroundColor);
+    Blocks.replace(0, image);
+}
+
+QColor BlockDelegate::GetBackgroundColor(){
+    return BackgroundColor;
 }

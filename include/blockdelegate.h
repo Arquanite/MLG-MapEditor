@@ -15,8 +15,11 @@ public:
     void AddBlock(QImage block);
     QImage GetImage(int block);
     int GetBlocksCount();
+    QColor GetBackgroundColor();
+    void SetBackgroundColor(QColor color);
 private:
     QVector<QImage> Blocks;
+    QColor BackgroundColor;
 signals:
 
 public slots:
