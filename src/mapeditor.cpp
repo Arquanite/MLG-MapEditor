@@ -35,6 +35,8 @@ MapEditor::MapEditor(QWidget *parent) :
     connect(ui->ButtonAdd, SIGNAL(clicked(bool)), this, SLOT(LoadImages()));
     connect(ui->ButtonEdit, SIGNAL(clicked(bool)), this, SLOT(EditBlock()));
 
+    //BlockModel->BlockNames.push_back(tr("Sky"));
+    //BlockTypes.push_back(tr("background"));
 }
 
 MapEditor::~MapEditor()
@@ -50,8 +52,12 @@ void MapEditor::LoadImages(){
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Select texturaz plz"), "", tr("PNG images (*.png)"));
     while(!files.empty()){
         QString file = files.back();
+        QString name = QFileInfo(file).fileName();
+        name = name.left(name.lastIndexOf("."));
+        name.replace('_',' ');
+        qDebug()<<name;
         BlockDlg->AddBlock(QImage(file));
-        BlockModel->BlockAdded();
+        BlockModel->AddBlock(name, tr("Solid"));
         files.pop_back();
     }
 }
@@ -61,6 +67,8 @@ void MapEditor::ImageChanged(QModelIndex index){
     if(block < BlockDlg->GetBlocksCount()) ActiveBlock = block;
     qDebug()<<index.column()<<":"<<index.row()<<"="<<index.column() + index.row()*4;
     ui->CurrentBlock->setIcon(QIcon(QPixmap().fromImage(BlockDlg->GetImage(index.model()->data(index).toInt()))));
+    ui->CurrentBlockName->setText(BlockModel->GetNameOf(ActiveBlock));
+    ui->CurrentBlockType->setText(BlockModel->GetTypeOf(ActiveBlock));
 }
 
 void MapEditor::EditBlock(){
